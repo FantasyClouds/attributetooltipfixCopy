@@ -15,4 +15,13 @@ public class AttributeModifierMixin {
     private static UUID load(UUID uuid) {
         return UUIDSwap.swapOrSelf(uuid);
     }
+    @ModifyVariable(
+            method = "<init>(Ljava/util/UUID;Ljava/util/function/Supplier;DLnet/minecraft/world/entity/ai/attributes/AttributeModifier$Operation;)V",
+            at = @At("HEAD"),
+            argsOnly = true,
+            ordinal = 0
+    )
+    private static UUID modifyUUID(UUID original) {
+        return UUIDSwap.swapOrSelf(original);
+    }
 }
