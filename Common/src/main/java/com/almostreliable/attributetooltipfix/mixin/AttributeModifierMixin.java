@@ -1,10 +1,13 @@
 package com.almostreliable.attributetooltipfix.mixin;
 
+import com.almostreliable.attributetooltipfix.AttributeTooltipFix;
 import com.almostreliable.attributetooltipfix.UUIDSwap;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.UUID;
 
@@ -14,5 +17,15 @@ public class AttributeModifierMixin {
     @ModifyVariable(method = "load", at = @At("STORE"), ordinal = 0)
     private static UUID load(UUID uuid) {
         return UUIDSwap.swapOrSelf(uuid);
+    }
+
+    @ModifyVariable(
+            method = "<init>(Ljava/util/UUID;Ljava/util/function/Supplier;DLnet/minecraft/world/entity/ai/attributes/AttributeModifier$Operation;)V",
+            at = @At("HEAD"),
+            argsOnly = true,
+            ordinal = 0
+    )
+    private static UUID modifyUUID(UUID original) {
+        return UUIDSwap.swapOrSelf(original);
     }
 }
